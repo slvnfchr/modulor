@@ -1,0 +1,19 @@
+{
+  "name": "tribble-analyzer",
+  "version": "0.0.1",
+  "description": "",
+  "scripts": {
+    "lint":"$(npm bin)/eslint ./lib"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/slvnfchr/tribble-analyzer.git"
+  },
+  "author": "Sylvain Foucher",
+  "license": "MIT",
+  "dependencies": {
+    "eslint": "^3.4.0",
+    "eslint-config-airbnb-base": "^7.0.0",
+    "eslint-plugin-import": "^1.14.0"
+  }
+}

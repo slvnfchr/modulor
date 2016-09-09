@@ -6,6 +6,7 @@
     "extends": "airbnb-base",
     "rules": {
     	"indent": [ "error", "tab" ],
-    	"no-tabs": "off"
+    	"no-tabs": "off",
+    	"strict": "off" // eslint, mocha and chai incompatibility (https://github.com/chaijs/chai/issues/578)
     }
 }

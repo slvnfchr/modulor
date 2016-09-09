@@ -1,0 +1,16 @@
+{
+    "env": {
+        "node": true,
+        "mocha": true,
+        "es6": true
+    },
+    "extends": "airbnb-base",
+    "rules": {
+    	"indent": [ "error", "tab" ],
+    	"import/no-extraneous-dependencies": "off",
+    	"no-tabs": "off",
+    	"padded-blocks": "off",
+    	"no-unused-expressions": "off",
+    	"strict": "off" // eslint, mocha and chai incompatibility (https://github.com/chaijs/chai/issues/578)
+    }
+}

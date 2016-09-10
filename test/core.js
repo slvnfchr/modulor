@@ -3,6 +3,7 @@
 
 const expect = require('chai').expect;
 const path = require('path');
+const File = require('../lib/core/file');
 const walker = require('../lib/core/walker');
 const dom = require('../lib/core/dom');
 // const javascript = require('../lib/core/javascript');
@@ -13,14 +14,9 @@ describe('Core modules', () => {
 
 		it('Get current file', (done) => {
 			walker.create(__dirname, ['core.js']).on('data', (file) => {
-				expect(file).to.have.include.keys(
-					'name', 'root', 'path', 'parentDir', 'fullParentDir', 'fullPath'
-				);
+				expect(file).to.be.instanceof(File);
 				expect(file.name).to.equal('core.js');
-				expect(file.root).to.equal(__dirname);
-				expect(file.fullParentDir).to.equal(path.resolve(file.root, file.parentDir));
-				expect(file.fullPath.replace(file.root + path.sep, '')).to.equal(file.path);
-				expect(file.fullPath).to.equal(path.resolve(file.root, file.path));
+				expect(file.fullPath).to.equal(path.resolve(__dirname, file.path));
 			}).on('end', () => {
 				done();
 			});
@@ -47,54 +43,35 @@ describe('Core modules', () => {
 	describe('HTML DOM analyzer', () => {
 
 		it('Get scripts from HTML files', (done) => {
-			const analyser = dom.create().on('data', (file) => {
-				expect(file).to.have.all.keys('src', 'path', 'text', 'async', 'defer', 'documents');
-				expect(file.documents).to.be.instanceof(Array);
+			const analyzer = dom.create().on('data', (file) => {
+				expect(file).to.be.instanceof(File);
+				expect(file.parents.length).to.be.above(0);
+				expect(file.parents[0]).to.be.instanceof(File);
+				expect(file.parents[0].name).to.match(/.*\.htm(l)?$/);
 			}).on('finish', () => {
 				done();
 			});
-			walker.create(__dirname, ['*.html']).pipe(analyser);
+			walker.create(__dirname, ['*.html', '*.html']).pipe(analyzer);
 		});
 
 		it('Test local HTML index file with all scripts integration modes', (done) => {
 			let num = 0;
-			const analyser = dom.create().on('data', (file) => {
-				expect(file.documents.length).to.equal(1);
-				expect(file.documents[0].name).to.equal('index.html');
-				expect(file.documents[0].root).to.equal(path.resolve(__dirname, 'examples/local'));
-				if (num === 0) { // external linked script
-					expect(file.src).to.equal('//domain.tld/1.js');
-					expect(file.path).to.be.null;
-					expect(file.defer).to.be.false;
-					expect(file.async).to.be.false;
-					expect(file.text).to.be.null;
-				} else if (num === 1) { // local linked script
-					expect(file.src).to.equal('2.js');
-					expect(file.defer).to.be.false;
-					expect(file.async).to.be.false;
-					expect(file.text).to.be.null;
-				} else if (num === 2) { // local linked script with defered loading
-					expect(file.src).to.equal('3.js');
-					expect(file.defer).to.be.true;
-					expect(file.async).to.be.false;
-					expect(file.text).to.be.null;
-				} else if (num === 3) { // local linked script with async loading
-					expect(file.src).to.equal('4.js');
-					expect(file.defer).to.be.false;
-					expect(file.async).to.be.true;
-					expect(file.text).to.be.null;
-				} else if (num === 4) { // inline
-					expect(file.src).to.be.null;
-					expect(file.defer).to.be.false;
-					expect(file.async).to.be.false;
-					expect(file.text.trim()).to.equal("var foo = 'bar';");
+			const analyzer = dom.create().on('data', (file) => {
+				expect(file.parents.length).to.equal(1);
+				expect(file.parents[0].name).to.equal('index.html');
+				if (num === 0) { // local linked script
+					expect(file.name).to.equal('2.js');
+				} else if (num === 1) { // local linked script with defered loading
+					expect(file.name).to.equal('3.js');
+				} else if (num === 2) { // local linked script with async loading
+					expect(file.name).to.equal('4.js');
 				}
 				num += 1;
 			}).on('end', () => {
-				expect(num).to.equal(5);
+				expect(num).to.equal(3);
 				done();
 			});
-			walker.create(path.resolve(__dirname, 'examples/local'), ['index.html']).pipe(analyser);
+			walker.create(path.resolve(__dirname, 'examples/local'), ['index.html']).pipe(analyzer);
 		});
 
 	});

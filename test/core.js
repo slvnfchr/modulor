@@ -6,7 +6,7 @@ const path = require('path');
 const File = require('../lib/core/file');
 const walker = require('../lib/core/walker');
 const dom = require('../lib/core/dom');
-// const javascript = require('../lib/core/javascript');
+const ast = require('../lib/core/ast');
 
 describe('Core modules', () => {
 
@@ -75,22 +75,51 @@ describe('Core modules', () => {
 		});
 
 	});
-/*
-	describe('Javascript analyser', () => {
 
-		it('Get scripts for each HTML file', (done) => {
-			var javascript = javascript.create().on('data', (file) => {
-				expect(file).to.have.include.keys(
-					'name', 'root', 'path', 'parentDir', 'fullParentDir', 'fullPath', 'scripts'
-				);
-				expect(file.scripts).to.be.instanceof(Array);
-				expect(file.scripts[0]).to.have.all.keys('src', 'source', 'async', 'defer', 'dependencies');
-			}).on('end', () => {
+	describe('Javascript AST analyzer', () => {
+
+		it('Get modules from javascript files', (done) => {
+			const analyzer = ast.create().on('data', (file) => {
+				expect(file).to.be.instanceof(File);
+				expect(file.parents.length).to.be.above(0);
+				expect(file.parents[0]).to.be.instanceof(File);
+				expect(file.parents[0].name).to.match(/.*\.js$/); // javascript entry file
+				expect(file.parents[0].parents.length).to.be.above(0);
+				expect(file.parents[0].parents[0]).to.be.instanceof(File);
+				expect(file.parents[0].parents[0].name).to.match(/.*\.html$/); // HTML entry file
+			}).on('finish', () => {
 				done();
 			});
-			walker.create(__dirname, ['local/*.html']).pipe(dom.create()).pipe(javascript);
+			walker.create(__dirname, ['*.html', '*.html']).pipe(dom.create()).pipe(analyzer);
+		});
+
+		it('Test local HTML index file with all scripts integration modes', (done) => {
+			let num = 0;
+			const analyzer = ast.create().on('data', (file) => {
+				expect(file).to.be.instanceof(File);
+				if (file.name === 'common.js') {
+					expect(file.parents.length).to.equal(2);
+					expect(file.parents[0].name).to.equal('2.js');
+					expect(file.parents[0].parents[0].name).to.equal('index.html');
+					expect(file.parents[1].name).to.equal('3.js');
+					expect(file.dependencies.length).to.equal(0);
+				} else if (file.name === 'module1.js') {
+					expect(file.parents.length).to.equal(1);
+					expect(file.parents[0].name).to.equal('3.js');
+					expect(file.dependencies.length).to.equal(0);
+				} else if (file.name === 'module2.js') {
+					expect(file.parents.length).to.equal(1);
+					expect(file.parents[0].name).to.equal('4.js');
+					expect(file.dependencies.length).to.equal(0);
+				}
+				num += 1;
+			}).on('end', () => {
+				expect(num).to.equal(3);
+				done();
+			});
+			walker.create(path.resolve(__dirname, 'examples/local'), ['*.html']).pipe(dom.create()).pipe(analyzer);
 		});
 
 	});
-*/
+
 });

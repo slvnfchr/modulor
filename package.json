@@ -1,29 +1,36 @@
 {
-  "name": "tribble-analyzer",
+  "name": "modulor",
   "version": "0.0.1",
-  "description": "",
+  "description": "Bundles inference from static files distribution",
+  "homepage": "https://github.com/slvnfchr/modulor",
   "scripts": {
     "test": "mocha --reporter spec test/*.js",
     "lint:lib": "$(npm bin)/eslint ./lib; exit 0",
     "lint:test": "$(npm bin)/eslint ./test; exit 0",
     "lint": "npm run lint:lib && npm run lint:test"
   },
+  "keywords": [
+    "requirejs",
+    "modules",
+    "amd",
+    "bundle"
+  ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/slvnfchr/tribble-analyzer.git"
+    "url": "https://github.com/slvnfchr/modulor.git"
   },
   "author": "Sylvain Foucher",
   "license": "MIT",
   "dependencies": {
     "amdetective": "^0.2.1",
-    "eslint": "^3.4.0",
-    "eslint-config-airbnb-base": "^7.0.0",
-    "eslint-plugin-import": "^1.14.0",
     "jsdom": "^9.5.0",
     "readdirp": "^2.1.0"
   },
   "devDependencies": {
     "chai": "^3.5.0",
+    "eslint": "^3.4.0",
+    "eslint-config-airbnb-base": "^7.0.0",
+    "eslint-plugin-import": "^1.14.0",
     "mocha": "^3.0.2"
   }
 }

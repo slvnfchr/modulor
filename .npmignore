@@ -1,0 +1,11 @@
+# https://docs.npmjs.com/misc/developers#keeping-files-out-of-your-package
+
+#tests
+test
+
+#configuration
+.eslintignore
+.eslintrc
+.gitignore
+.gitmodules
+.npmignore

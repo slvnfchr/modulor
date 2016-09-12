@@ -1,6 +1,6 @@
 # Modulor
 
-RequireJS modules configuration inference from static files distribution
+Bundles configuration inference from static files distribution
 
 ## Install
 

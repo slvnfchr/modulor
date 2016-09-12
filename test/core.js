@@ -45,9 +45,10 @@ describe('Core modules', () => {
 		it('Get scripts from HTML files', (done) => {
 			const analyzer = dom.create().on('data', (file) => {
 				expect(file).to.be.instanceof(File);
+				expect(file.type).to.equal(File.types.JAVASCRIPT);
 				expect(file.parents.length).to.be.above(0);
 				expect(file.parents[0]).to.be.instanceof(File);
-				expect(file.parents[0].name).to.match(/.*\.htm(l)?$/);
+				expect(file.parents[0].type).to.equal(File.types.HTML);
 			}).on('finish', () => {
 				done();
 			});
@@ -81,16 +82,13 @@ describe('Core modules', () => {
 		it('Get modules from javascript files', (done) => {
 			const analyzer = ast.create().on('data', (file) => {
 				expect(file).to.be.instanceof(File);
+				expect(file.type).to.equal(File.types.JAVASCRIPT);
 				expect(file.parents.length).to.be.above(0);
 				expect(file.parents[0]).to.be.instanceof(File);
-				expect(file.parents[0].name).to.match(/.*\.js$/); // javascript entry file
-				expect(file.parents[0].parents.length).to.be.above(0);
-				expect(file.parents[0].parents[0]).to.be.instanceof(File);
-				expect(file.parents[0].parents[0].name).to.match(/.*\.html$/); // HTML entry file
-			}).on('finish', () => {
+			}).on('end', () => {
 				done();
 			});
-			walker.create(__dirname, ['*.html', '*.html']).pipe(dom.create()).pipe(analyzer);
+			walker.create(__dirname, ['*.html']).pipe(dom.create()).pipe(analyzer);
 		});
 
 		it('Test local HTML index file with all scripts integration modes', (done) => {
@@ -114,7 +112,7 @@ describe('Core modules', () => {
 				}
 				num += 1;
 			}).on('end', () => {
-				expect(num).to.equal(3);
+				expect(num).to.equal(6);
 				done();
 			});
 			walker.create(path.resolve(__dirname, 'examples/local'), ['*.html']).pipe(dom.create()).pipe(analyzer);

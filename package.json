@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "description": "Bundles inference from static files distribution",
   "homepage": "https://github.com/slvnfchr/modulor",
+  "main": "lib/index.js",
   "scripts": {
     "test": "mocha --reporter spec test/*.js",
     "lint:lib": "$(npm bin)/eslint ./lib; exit 0",
@@ -24,6 +25,7 @@
   "dependencies": {
     "amdetective": "^0.2.1",
     "jsdom": "^9.5.0",
+    "mime-types": "^2.1.11",
     "readdirp": "^2.1.0"
   },
   "devDependencies": {

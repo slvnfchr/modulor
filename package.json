@@ -24,6 +24,7 @@
   "license": "MIT",
   "dependencies": {
     "amdetective": "^0.2.1",
+    "esprima": "^3.0.0",
     "jsdom": "^9.5.0",
     "mime-types": "^2.1.11",
     "readdirp": "^2.1.0"

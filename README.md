@@ -24,7 +24,7 @@ Streams chunks are tested according to this rule and streams may emit _warn_ eve
 ### modulor(source)
 
 This method creates a stream that traverse `source` folder and emit a `data` event with inferred `configuration`. 
-It is composed of a **Walker**, a **DOMAnalyzer**, a **ASTAnalyzer** and a **Bundler** stream piped together (see below). 
+It is composed of a **Walker**, a **DOMAnalyzer**, a **ASTAnalyzer** and a **Bundler** stream piped together (see below).
 
 ```js
 modulor(source).on('data', function (configuration) {
@@ -32,8 +32,8 @@ modulor(source).on('data', function (configuration) {
 })
 ```
 
-The emitted configuration object has the following structure : 
-- paths : object with modules' IDs as key and modules' paths as values
+The emitted `configuration` object is formatted according to the detected bundling system.
+By default, the object has the following structure : 
 - bundles : array with for each bundle :
 	- name : bundle ID
 	- include : array of packaged modules' IDs
@@ -59,12 +59,12 @@ This a wrapper around [readdirp](https://github.com/thlorenz/readdirp) module.
 
 ```js
 modulor.Walker.create(source, filter)
-	.on('data', function (file) {
-    	// ...
-	})
-	.on('end', function () {
-    	// ...
-	})
+  .on('data', function (file) {
+      // ...
+  })
+  .on('end', function () {
+      // ...
+  })
 ```
 
 ### modulor.DOMAnalyzer.create()
@@ -73,53 +73,54 @@ This method creates a Document Object Model (DOM) analyzer in the form of a tran
 
 ```js
 modulor.DOMAnalyzer.create()
-	.on('data', function (file) {
-    	// ...
-	})
-	.on('warn', function (file) {
-    	// event emitted if file is not a File instance 
-    	// or its type property is not File.types.HTML
-    	// ...
-	})
-	.on('end', function () {
-    	// ...
-	})
+  .on('data', function (file) {
+      // ...
+  })
+  .on('warn', function (file) {
+      // event emitted if file is not a File instance 
+      // or its type property is not File.types.HTML
+      // ...
+  })
+  .on('end', function () {
+      // ...
+  })
 ```
 
-### modulor.ASTAnalyzer.create()
+### modulor.ASTAnalyzer.create(bundler)
 
-This method creates an Abstract syntax tree (AST) analyzer in the form of a transform stream that take `file` input chunks with type File.types.JAVASCRIPT and emit all modules as chunks of the same type.
+This method creates an Abstract Syntax Tree (AST) analyzer in the form of a transform stream that take `file` input chunks with type File.types.JAVASCRIPT and emit all modules as chunks of the same type.
 
 ```js
 modulor.ASTAnalyzer.create()
-	.on('data', function (file) {
-    	// ...
-	})
-	.on('warn', function (file) {
-    	// event emitted if file is not a File instance
-    	// or its type property is not File.types.JAVASCRIPT
-    	// ...
-	})
-	.on('end', function () {
-    	// ...
-	})
+  .on('data', function (file) {
+      // ...
+  })
+  .on('warn', function (file) {
+      // event emitted if file is not a File instance
+      // or its type property is not File.types.JAVASCRIPT
+      // ...
+  })
+  .on('end', function () {
+      // ...
+  })
 ```
 
-### modulor.Bundler.create()
+### modulor.Bundler.create(bundler)
 
 This method creates a transform stream that take `file` input chunks with type File.types.JAVASCRIPT and emit the inferred configuration.
+The `bundler` parameter enables to format the output configuration according to the specified bundler.
 
 ```js
-modulor.Bundler.create()
-	.on('data', function (configuration) {
-    	// ...
-	})
-	.on('warn', function (file) {
-    	// event emitted if file is not a File instance
-    	// or its type property is not File.types.JAVASCRIPT
-    	// ...
-	})
-	.on('end', function () {
-    	// ...
-	})
+modulor.Bundler.create(bundler)
+  .on('data', function (configuration) {
+      // ...
+  })
+  .on('warn', function (file) {
+      // event emitted if file is not a File instance
+      // or its type property is not File.types.JAVASCRIPT
+      // ...
+  })
+  .on('end', function () {
+      // ...
+  })
 ```

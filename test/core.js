@@ -219,7 +219,7 @@ describe('Core modules', () => {
 		it('Empty configuration from single module file', (done) => {
 			const bundler = Bundler.create().on('data', (configuration) => {
 				expect(configuration).to.be.instanceof(Object);
-				expect(configuration).to.be.have.all.keys('paths', 'bundles');
+				expect(configuration).to.be.have.all.keys('bundles');
 			}).on('end', () => {
 				done();
 			});

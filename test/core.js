@@ -9,6 +9,7 @@ const Walker = require('../lib/core/walker');
 const DOMAnalyzer = require('../lib/core/dom');
 const ASTAnalyzer = require('../lib/core/ast');
 const Bundler = require('../lib/core/bundler');
+const constants = require('../lib/core/constants');
 
 describe('Core modules', () => {
 
@@ -149,6 +150,12 @@ describe('Core modules', () => {
 
 	describe('AST analyzer', () => {
 
+		it('Instantiation with type and configuration', (done) => {
+			const analyzer = ASTAnalyzer.create(constants.types.REQUIREJS);
+			expect(analyzer.type).to.equal(constants.types.REQUIREJS);
+			done();
+		});
+
 		it('Ignore non javascript files', (done) => {
 			const analyzer = ASTAnalyzer.create().on('data', () => {
 				assert(false, 'No data event should be emitted');
@@ -203,6 +210,14 @@ describe('Core modules', () => {
 	});
 
 	describe('Bundler', () => {
+
+		it('Instantiation with type and configuration', (done) => {
+			const configuration = { foo: 'bar' };
+			const analyzer = Bundler.create(constants.types.REQUIREJS, configuration);
+			expect(analyzer.type).to.equal(constants.types.REQUIREJS);
+			expect(analyzer.configuration).to.deep.equal(configuration);
+			done();
+		});
 
 		it('Ignore non javascript files', (done) => {
 			const analyzer = Bundler.create().on('data', () => {

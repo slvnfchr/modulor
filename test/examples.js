@@ -43,8 +43,10 @@ describe('Examples', () => {
 	});
 
 	it('RequireJS multipage example', (done) => {
-		modulor(path.resolve(__dirname, 'examples/requirejs-multipage/www')).on('data', (configuration) => {
-			const target = sanitize(path.resolve(__dirname, 'examples/requirejs-multipage/tools/build.js'));
+		const folder = path.resolve(__dirname, 'examples/requirejs-multipage/');
+		const analyzer = modulor(path.resolve(folder, 'www')).on('data', (configuration) => {
+			expect(analyzer.type).to.equal(modulor.types.REQUIREJS);
+			const target = sanitize(path.resolve(folder, './tools/build.js'));
 			expect(configuration.modules).to.deep.equal(target.modules);
 		}).on('end', () => {
 			done();

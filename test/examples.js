@@ -21,22 +21,29 @@ describe('Examples', () => {
 			const bundles = [
 				{
 					name: './lib/common',
-					include: [],
+					include: ['./lib/test'],
 				},
 				{
 					name: '2.js',
-					include: [],
+					exclude: ['./lib/common'],
 				},
 				{
 					name: '3.js',
 					include: ['./lib/module1'],
+					exclude: ['./lib/common'],
 				},
 				{
 					name: '4.js',
 					include: ['./lib/module2'],
+					exclude: ['./lib/common'],
+				},
+				{
+					name: './lib/test',
+					include: ['./lib/module4', './lib/module3'],
+					exclude: ['./lib/common'],
 				},
 			];
-			expect(configuration.bundles).to.deep.equal(bundles);
+			expect(configuration.modules).to.deep.equal(bundles);
 		}).on('end', () => {
 			done();
 		});

@@ -132,15 +132,17 @@ describe('Core modules', () => {
 				expect(file.parents.length).to.equal(1);
 				expect(file.parents[0].name).to.equal('index.html');
 				if (num === 0) { // local linked script
+					expect(file.name).to.equal('require.js');
+				} else if (num === 1) { // local linked script
 					expect(file.name).to.equal('2.js');
-				} else if (num === 1) { // local linked script with defered loading
+				} else if (num === 2) { // local linked script with defered loading
 					expect(file.name).to.equal('3.js');
-				} else if (num === 2) { // local linked script with async loading
+				} else if (num === 3) { // local linked script with async loading
 					expect(file.name).to.equal('4.js');
 				}
 				num += 1;
 			}).on('end', () => {
-				expect(num).to.equal(3);
+				expect(num).to.equal(4);
 				done();
 			});
 			Walker.create(path.resolve(__dirname, 'examples/local'), ['index.html']).pipe(analyzer);
@@ -201,7 +203,7 @@ describe('Core modules', () => {
 				}
 				num += 1;
 			}).on('end', () => {
-				expect(num).to.equal(6);
+				expect(num).to.equal(10);
 				done();
 			});
 			Walker.create(path.resolve(__dirname, 'examples/local'), ['*.html']).pipe(DOMAnalyzer.create()).pipe(analyzer);

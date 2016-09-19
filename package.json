@@ -1,6 +1,6 @@
 {
   "name": "modulor",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Bundles inference from static files distribution",
   "homepage": "https://github.com/slvnfchr/modulor",
   "main": "lib/index.js",
